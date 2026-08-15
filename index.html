@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TermRunway – Student Budget Calculator</title>
+<meta name="description" content="Track spending, calculate your daily allowance, and make your money last the semester.">
+
+<!-- Google Fonts: Inter for UI, Poppins for display numbers -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Skip link for keyboard/screen reader users -->
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar" id="navbar">
+  <div class="navbar__inner">
+    <a href="#top" class="logo" aria-label="TermRunway home">
+      <span class="logo__mark" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L4 14h5l-1 8 9-13h-5l0-7z" fill="url(#logoGrad)"/>
+          <defs>
+            <linearGradient id="logoGrad" x1="4" y1="2" x2="17" y2="22" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#4F46E5"/>
+              <stop offset="1" stop-color="#7C3AED"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </span>
+      TermRunway
+    </a>
+
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#budget">Budget</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#savings">Savings</a>
+      <a href="#export">Export</a>
+    </nav>
+
+    <div class="navbar__actions">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow">Built for one semester at a time</p>
+        <h1>Manage your student budget, smarter.</h1>
+        <p class="hero__subtitle">Track spending, calculate your daily allowance, manage savings, and make sure your money lasts the entire semester — not just the first three weeks of it.</p>
+        <div class="hero__actions">
+          <a href="#budget" class="btn btn--primary">
+            Get started
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#dashboard" class="btn btn--ghost">Learn more</a>
+        </div>
+        <div class="hero__meta">
+          <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg> No sign-up</span>
+          <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg> Data stays on your device</span>
+          <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg> Works offline</span>
+        </div>
+      </div>
+
+      <div class="hero__art" aria-hidden="true">
+        <div class="hero__glow"></div>
+        <svg class="runway-illustration" width="440" height="380" viewBox="0 0 440 380" fill="none">
+          <!-- Floating dashboard card -->
+          <g class="float-card float-card--main">
+            <rect x="70" y="60" width="230" height="150" rx="20" fill="url(#cardGrad)" opacity="0.97"/>
+            <rect x="92" y="86" width="90" height="10" rx="5" fill="#ffffff" opacity="0.85"/>
+            <rect x="92" y="104" width="60" height="8" rx="4" fill="#ffffff" opacity="0.55"/>
+            <rect x="92" y="140" width="186" height="46" rx="12" fill="#ffffff" opacity="0.16"/>
+            <path d="M104 168 L124 152 L144 162 L164 140 L184 150 L204 128 L224 146 L244 122" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9"/>
+          </g>
+          <!-- Runway strip -->
+          <g class="runway-strip">
+            <path d="M40 330 L400 330 L330 300 L110 300 Z" fill="#E5E9F5" class="runway-base"/>
+            <rect x="215" y="215" width="10" height="85" fill="#ffffff"/>
+            <rect x="180" y="235" width="8" height="65" fill="#ffffff"/>
+            <rect x="252" y="235" width="8" height="65" fill="#ffffff"/>
+            <rect x="145" y="250" width="7" height="50" fill="#ffffff"/>
+            <rect x="288" y="250" width="7" height="50" fill="#ffffff"/>
+          </g>
+          <!-- Coin / paper plane taking off -->
+          <g class="float-card float-card--coin">
+            <circle cx="330" cy="120" r="30" fill="url(#coinGrad)"/>
+            <text x="330" y="128" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="700" font-size="22" fill="#ffffff">₹</text>
+          </g>
+          <g class="float-card float-card--small">
+            <rect x="30" y="180" width="70" height="70" rx="16" fill="#22C55E" opacity="0.14"/>
+            <path d="M52 214 L62 224 L82 200" stroke="#22C55E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </g>
+          <defs>
+            <linearGradient id="cardGrad" x1="70" y1="60" x2="300" y2="210" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#4F46E5"/>
+              <stop offset="1" stop-color="#7C3AED"/>
+            </linearGradient>
+            <linearGradient id="coinGrad" x1="300" y1="90" x2="360" y2="150" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#F59E0B"/>
+              <stop offset="1" stop-color="#EF4444"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DASHBOARD SUMMARY ============ -->
+  <section class="section" id="dashboard">
+    <div class="section__inner">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Dashboard</p>
+          <h2>Your semester, at a glance</h2>
+        </div>
+        <p class="section__desc">Six numbers that matter. Fill in the budget form below and this whole dashboard updates instantly.</p>
+      </div>
+
+      <div class="summary-grid" id="summaryGrid">
+
+        <article class="stat-card" data-stat="income">
+          <div class="stat-card__top">
+            <span class="stat-card__icon stat-card__icon--indigo" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </span>
+            <span class="stat-card__label">Monthly Income</span>
+          </div>
+          <p class="stat-card__value"><span class="currency-symbol">₹</span><span class="counter" id="statIncome">0</span></p>
+          <div class="mini-bar"><div class="mini-bar__fill mini-bar__fill--indigo" id="barIncome" style="width:0%"></div></div>
+          <p class="stat-card__note">All income sources combined</p>
+        </article>
+
+        <article class="stat-card" data-stat="expenses">
+          <div class="stat-card__top">
+            <span class="stat-card__icon stat-card__icon--danger" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+            </span>
+            <span class="stat-card__label">Monthly Expenses</span>
+          </div>
+          <p class="stat-card__value"><span class="currency-symbol">₹</span><span class="counter" id="statExpenses">0</span></p>
+          <div class="mini-bar"><div class="mini-bar__fill mini-bar__fill--danger" id="barExpenses" style="width:0%"></div></div>
+          <p class="stat-card__note">Rent, food, transport &amp; more</p>
+        </article>
+
+        <article class="stat-card" data-stat="balance">
+          <div class="stat-card__top">
+            <span class="stat-card__icon stat-card__icon--success" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            </span>
+            <span class="stat-card__label">Remaining Balance</span>
+          </div>
+          <p class="stat-card__value"><span class="currency-symbol">₹</span><span class="counter" id="statBalance">0</span></p>
+          <div class="mini-bar"><div class="mini-bar__fill mini-bar__fill--success" id="barBalance" style="width:0%"></div></div>
+          <p class="stat-card__note" id="noteBalance">Income minus expenses</p>
+        </article>
+
+        <article class="stat-card" data-stat="daily">
+          <div class="stat-card__top">
+            <span class="stat-card__icon stat-card__icon--warning" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            </span>
+            <span class="stat-card__label">Daily Spending Limit</span>
+          </div>
+          <p class="stat-card__value"><span class="currency-symbol">₹</span><span class="counter" id="statDaily">0</span><span class="stat-card__unit">/day</span></p>
+          <div class="mini-bar"><div class="mini-bar__fill mini-bar__fill--warning" id="barDaily" style="width:0%"></div></div>
+          <p class="stat-card__note">Based on remaining days</p>
+        </article>
+
+        <article class="stat-card" data-stat="savings">
+          <div class="stat-card__top">
+            <span class="stat-card__icon stat-card__icon--violet" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5-1.5-4-2-6-1L5 12l3 3-8 4 4-8 3 3 8-8c1-2 .5-4.5-1-6z"/><path d="M14.5 9.5L18 6"/></svg>
+            </span>
+            <span class="stat-card__label">Savings</span>
+          </div>
+          <p class="stat-card__value"><span class="currency-symbol">₹</span><span class="counter" id="statSavings">0</span></p>
+          <div class="mini-bar"><div class="mini-bar__fill mini-bar__fill--violet" id="barSavings" style="width:0%"></div></div>
+          <p class="stat-card__note" id="noteSavings">Toward your goal</p>
+        </article>
+
+        <article class="stat-card" data-stat="runway">
+          <div class="stat-card__top">
+            <span class="stat-card__icon stat-card__icon--indigo" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L4 14h5l-1 8 9-13h-5l0-7z"/></svg>
+            </span>
+            <span class="stat-card__label">Semester Runway</span>
+          </div>
+          <p class="stat-card__value"><span class="counter" id="statRunway">0</span><span class="stat-card__unit" id="runwayUnit">days</span></p>
+          <div class="mini-bar"><div class="mini-bar__fill mini-bar__fill--indigo" id="barRunway" style="width:0%"></div></div>
+          <p class="stat-card__note">At your current burn rate</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BUDGET INPUT FORM ============ -->
+  <section class="section section--tint" id="budget">
+    <div class="section__inner">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Budget</p>
+          <h2>Enter your numbers</h2>
+        </div>
+        <p class="section__desc">Nothing leaves your browser. Every field below is stored locally and recalculated the moment you hit Calculate.</p>
+      </div>
+
+      <form class="budget-card" id="budgetForm" novalidate>
+        <div class="budget-card__columns">
+
+          <!-- Income column -->
+          <fieldset class="form-col">
+            <legend>
+              <span class="legend-icon legend-icon--success" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </span>
+              Income
+            </legend>
+
+            <div class="field">
+              <label for="scholarship">Scholarship</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-scholarship">₹</span><input type="number" id="scholarship" name="scholarship" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="partTime">Part-Time Income</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-partTime">₹</span><input type="number" id="partTime" name="partTime" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="parentsSupport">Parents Support</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-parentsSupport">₹</span><input type="number" id="parentsSupport" name="parentsSupport" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="studentLoan">Student Loan</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-studentLoan">₹</span><input type="number" id="studentLoan" name="studentLoan" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="otherIncome">Other Income</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-otherIncome">₹</span><input type="number" id="otherIncome" name="otherIncome" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+          </fieldset>
+
+          <!-- Expenses column -->
+          <fieldset class="form-col">
+            <legend>
+              <span class="legend-icon legend-icon--danger" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+              </span>
+              Expenses
+            </legend>
+
+            <div class="field">
+              <label for="rent">Rent</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-rent">₹</span><input type="number" id="rent" name="rent" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="food">Food</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-food">₹</span><input type="number" id="food" name="food" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="transport">Transport</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-transport">₹</span><input type="number" id="transport" name="transport" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="utilities">Utilities</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-utilities">₹</span><input type="number" id="utilities" name="utilities" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="entertainment">Entertainment</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-entertainment">₹</span><input type="number" id="entertainment" name="entertainment" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="shopping">Shopping</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-shopping">₹</span><input type="number" id="shopping" name="shopping" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="education">Education</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-education">₹</span><input type="number" id="education" name="education" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="medical">Medical</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-medical">₹</span><input type="number" id="medical" name="medical" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="otherExpenses">Other Expenses</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-otherExpenses">₹</span><input type="number" id="otherExpenses" name="otherExpenses" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+          </fieldset>
+
+          <!-- Savings & timeframe column -->
+          <fieldset class="form-col">
+            <legend>
+              <span class="legend-icon legend-icon--violet" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5-1.5-4-2-6-1L5 12l3 3-8 4 4-8 3 3 8-8c1-2 .5-4.5-1-6z"/></svg>
+              </span>
+              Savings &amp; timeframe
+            </legend>
+
+            <div class="field">
+              <label for="currentSavings">Current Savings</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-currentSavings">₹</span><input type="number" id="currentSavings" name="currentSavings" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="savingsGoal">Savings Goal</label>
+              <div class="input-wrap"><span class="input-prefix" id="prefix-savingsGoal">₹</span><input type="number" id="savingsGoal" name="savingsGoal" min="0" step="1" inputmode="decimal" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="semesterLength">Semester Length (days)</label>
+              <div class="input-wrap"><input type="number" id="semesterLength" name="semesterLength" min="1" step="1" inputmode="numeric" placeholder="120"></div>
+            </div>
+            <div class="field">
+              <label for="remainingDays">Remaining Days</label>
+              <div class="input-wrap"><input type="number" id="remainingDays" name="remainingDays" min="0" step="1" inputmode="numeric" placeholder="90"></div>
+            </div>
+            <div class="field">
+              <label for="currency">Currency</label>
+              <div class="input-wrap input-wrap--select">
+                <select id="currency" name="currency">
+                  <option value="₹" selected>₹ Indian Rupee</option>
+                  <option value="$">$ US Dollar</option>
+                  <option value="€">€ Euro</option>
+                  <option value="£">£ British Pound</option>
+                  <option value="¥">¥ Japanese Yen</option>
+                  <option value="A$">A$ Australian Dollar</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="timeframe">Timeframe</label>
+              <div class="input-wrap input-wrap--select">
+                <select id="timeframe" name="timeframe">
+                  <option value="monthly" selected>Monthly figures</option>
+                  <option value="semester">Semester-total figures</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+        </div>
+
+        <div class="budget-card__actions">
+          <button type="submit" class="btn btn--primary" id="calcBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+            Calculate
+          </button>
+          <button type="button" class="btn btn--secondary" id="saveBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+            Save
+          </button>
+          <button type="button" class="btn btn--ghost" id="resetBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+            Reset
+          </button>
+          <span class="form-status" id="formStatus" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ ANALYTICS ============ -->
+  <section class="section" id="analytics">
+    <div class="section__inner">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Analytics</p>
+          <h2>Where your money goes</h2>
+        </div>
+        <p class="section__desc">Three charts, redrawn instantly from your latest numbers.</p>
+      </div>
+
+      <div class="analytics-grid">
+        <article class="chart-card">
+          <h3>Income vs Expenses</h3>
+          <p class="chart-card__sub">Monthly comparison</p>
+          <div class="chart-card__canvas-wrap">
+            <canvas id="chartBar" width="480" height="300" role="img" aria-label="Bar chart comparing monthly income and expenses"></canvas>
+          </div>
+        </article>
+
+        <article class="chart-card">
+          <h3>Expense Breakdown</h3>
+          <p class="chart-card__sub">By category</p>
+          <div class="chart-card__canvas-wrap chart-card__canvas-wrap--pie">
+            <canvas id="chartPie" width="280" height="280" role="img" aria-label="Pie chart of expenses by category"></canvas>
+            <ul class="chart-legend" id="pieLegend"></ul>
+          </div>
+        </article>
+
+        <article class="chart-card">
+          <h3>Savings Progress</h3>
+          <p class="chart-card__sub">Toward your goal</p>
+          <div class="chart-card__canvas-wrap chart-card__canvas-wrap--circular">
+            <canvas id="chartSavingsRing" width="240" height="240" role="img" aria-label="Circular progress chart of savings toward goal"></canvas>
+            <div class="ring-center">
+              <span class="ring-center__value" id="ringPercent">0%</span>
+              <span class="ring-center__label">complete</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 50/30/20 ANALYSIS ============ -->
+  <section class="section section--tint">
+    <div class="section__inner">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Budget health</p>
+          <h2>The 50/30/20 rule</h2>
+        </div>
+        <p class="section__desc">Needs, wants, and savings — measured against the classic split of your income.</p>
+      </div>
+
+      <div class="rule-grid">
+        <article class="rule-card" id="ruleNeeds">
+          <div class="rule-card__head">
+            <span class="rule-card__dot rule-card__dot--indigo" aria-hidden="true"></span>
+            <h3>Needs</h3>
+            <span class="rule-card__target">Target 50%</span>
+          </div>
+          <p class="rule-card__pct"><span class="counter" id="needsPct">0</span>%</p>
+          <div class="progress-track"><div class="progress-fill progress-fill--indigo" id="needsBar" style="width:0%"></div></div>
+          <p class="rule-card__status" id="needsStatus">Add your numbers above</p>
+        </article>
+
+        <article class="rule-card" id="ruleWants">
+          <div class="rule-card__head">
+            <span class="rule-card__dot rule-card__dot--warning" aria-hidden="true"></span>
+            <h3>Wants</h3>
+            <span class="rule-card__target">Target 30%</span>
+          </div>
+          <p class="rule-card__pct"><span class="counter" id="wantsPct">0</span>%</p>
+          <div class="progress-track"><div class="progress-fill progress-fill--warning" id="wantsBar" style="width:0%"></div></div>
+          <p class="rule-card__status" id="wantsStatus">Add your numbers above</p>
+        </article>
+
+        <article class="rule-card" id="ruleSavings">
+          <div class="rule-card__head">
+            <span class="rule-card__dot rule-card__dot--success" aria-hidden="true"></span>
+            <h3>Savings</h3>
+            <span class="rule-card__target">Target 20%</span>
+          </div>
+          <p class="rule-card__pct"><span class="counter" id="savingsPct">0</span>%</p>
+          <div class="progress-track"><div class="progress-fill progress-fill--success" id="savingsBar" style="width:0%"></div></div>
+          <p class="rule-card__status" id="savingsStatus">Add your numbers above</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DAILY SPENDING + RUNWAY ============ -->
+  <section class="section">
+    <div class="section__inner">
+      <div class="feature-grid">
+
+        <!-- Daily spending -->
+        <article class="feature-card feature-card--daily" id="dailyCard">
+          <div class="feature-card__text">
+            <p class="eyebrow">Daily budget</p>
+            <h3>Today's spending limit</h3>
+            <p class="daily-amount"><span class="currency-symbol" id="dailyCurrency">₹</span><span class="counter" id="dailyAmount">0</span><span class="daily-amount__unit">/day</span></p>
+            <p class="daily-status" id="dailyStatus">Fill in the budget form to see your daily limit.</p>
+          </div>
+          <div class="feature-card__ring">
+            <canvas id="dailyRing" width="180" height="180" role="img" aria-label="Circular gauge of days remaining in the month"></canvas>
+            <div class="ring-center ring-center--small">
+              <span class="ring-center__value" id="dailyRingLabel">—</span>
+              <span class="ring-center__label">days left</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Semester runway -->
+        <article class="feature-card feature-card--runway" id="runwayCard">
+          <div class="feature-card__text">
+            <p class="eyebrow">Semester runway</p>
+            <h3>How long your money lasts</h3>
+            <div class="runway-stats">
+              <div>
+                <span class="runway-stats__value" id="runwayMonths">0</span>
+                <span class="runway-stats__label">months left</span>
+              </div>
+              <div>
+                <span class="runway-stats__value" id="semesterCompletion">0%</span>
+                <span class="runway-stats__label">semester complete</span>
+              </div>
+              <div>
+                <span class="runway-stats__value" id="remainingBudgetVal">₹0</span>
+                <span class="runway-stats__label">remaining budget</span>
+              </div>
+            </div>
+            <div class="runway-track">
+              <div class="runway-track__fill" id="runwayTrackFill" style="width:0%"></div>
+              <svg class="runway-track__plane" id="runwayPlane" width="26" height="26" viewBox="0 0 24 24" fill="none" style="left:0%">
+                <path d="M12 2L4 14h5l-1 8 9-13h-5l0-7z" fill="#4F46E5"/>
+              </svg>
+            </div>
+            <p class="runway-note" id="runwayNote">Enter your semester length and expenses to calculate.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SAVINGS GOAL TRACKER ============ -->
+  <section class="section section--tint" id="savings">
+    <div class="section__inner">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Savings</p>
+          <h2>Goal tracker</h2>
+        </div>
+        <p class="section__desc">Watch your progress toward a target, one deposit at a time.</p>
+      </div>
+
+      <div class="savings-card">
+        <div class="savings-card__ring">
+          <canvas id="savingsGoalRing" width="220" height="220" role="img" aria-label="Circular progress chart of savings goal completion"></canvas>
+          <div class="ring-center">
+            <span class="ring-center__value" id="savingsGoalPercent">0%</span>
+            <span class="ring-center__label">of goal</span>
+          </div>
+        </div>
+        <dl class="savings-card__stats">
+          <div>
+            <dt>Current Savings</dt>
+            <dd><span class="currency-symbol" id="savingsCurrentCurrency">₹</span><span class="counter" id="savingsCurrentVal">0</span></dd>
+          </div>
+          <div>
+            <dt>Target</dt>
+            <dd><span class="currency-symbol" id="savingsTargetCurrency">₹</span><span class="counter" id="savingsTargetVal">0</span></dd>
+          </div>
+          <div>
+            <dt>Remaining Amount</dt>
+            <dd><span class="currency-symbol" id="savingsRemainingCurrency">₹</span><span class="counter" id="savingsRemainingVal">0</span></dd>
+          </div>
+          <div>
+            <dt>Completion</dt>
+            <dd><span class="counter" id="savingsCompletionVal">0</span>%</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SMART RECOMMENDATIONS ============ -->
+  <section class="section">
+    <div class="section__inner">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Insights</p>
+          <h2>Smart recommendations</h2>
+        </div>
+        <p class="section__desc">Generated from your latest numbers — these update every time you recalculate.</p>
+      </div>
+
+      <ul class="recommend-grid" id="recommendGrid">
+        <li class="recommend-card recommend-card--placeholder">
+          <span class="recommend-card__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+          </span>
+          <p>Fill in the budget form and hit <strong>Calculate</strong> to see personalized recommendations here.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ EXPORT ============ -->
+  <section class="section section--tint" id="export">
+    <div class="section__inner">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Export</p>
+          <h2>Take your data with you</h2>
+        </div>
+        <p class="section__desc">Everything is generated locally in your browser — nothing is uploaded anywhere.</p>
+      </div>
+
+      <div class="export-grid">
+        <button class="export-card" id="exportJson" type="button">
+          <span class="export-card__icon export-card__icon--indigo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          </span>
+          <span class="export-card__title">Export JSON</span>
+          <span class="export-card__desc">Full budget data, structured for re-import or backup.</span>
+        </button>
+
+        <button class="export-card" id="exportCsv" type="button">
+          <span class="export-card__icon export-card__icon--success" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </span>
+          <span class="export-card__title">Export CSV</span>
+          <span class="export-card__desc">Open your income and expenses in a spreadsheet.</span>
+        </button>
+
+        <button class="export-card" id="exportPdf" type="button">
+          <span class="export-card__icon export-card__icon--danger" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+          </span>
+          <span class="export-card__title">Print PDF</span>
+          <span class="export-card__desc">A clean, printable summary of your full dashboard.</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <a href="#top" class="logo logo--footer">
+        <span class="logo__mark" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 14h5l-1 8 9-13h-5l0-7z" fill="url(#logoGradFooter)"/><defs><linearGradient id="logoGradFooter" x1="4" y1="2" x2="17" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#4F46E5"/><stop offset="1" stop-color="#7C3AED"/></linearGradient></defs></svg>
+        </span>
+        TermRunway
+      </a>
+      <p>Made with ❤️ for students.</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer">
+      <a href="#dashboard">About</a>
+      <a href="#" id="privacyLink">Privacy</a>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- Toast notification region -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
