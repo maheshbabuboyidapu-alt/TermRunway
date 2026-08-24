@@ -1,14 +1,13 @@
 /* ==========================================================================
    TermRunway — Student Budget Calculator
    app.js — all interactivity: calculations, charts, storage, export, theme.
-   No dependencies. Everything runs client-side.
    ========================================================================== */
 
 (function () {
   'use strict';
 
   /* ------------------------------------------------------------------ */
-  /* Constants & storage keys                                            */
+  /* Constants & storage keys                                           */
   /* ------------------------------------------------------------------ */
   const STORAGE_KEY = 'termrunway_budget_v1';
   const THEME_KEY = 'termrunway_theme_v1';
@@ -27,7 +26,7 @@
   const PIE_COLORS = ['#4F46E5', '#7C3AED', '#22C55E', '#F59E0B', '#EF4444', '#0EA5E9', '#EC4899', '#14B8A6', '#A855F7'];
 
   /* ------------------------------------------------------------------ */
-  /* DOM helpers                                                          */
+  /* DOM helpers                                                        */
   /* ------------------------------------------------------------------ */
   const $ = (id) => document.getElementById(id);
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
@@ -39,7 +38,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* State                                                                */
+  /* State                                                              */
   /* ------------------------------------------------------------------ */
   let state = getDefaultState();
   let lastResult = null;
@@ -55,7 +54,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Theme                                                                */
+  /* Theme                                                              */
   /* ------------------------------------------------------------------ */
   function initTheme() {
     const saved = safeGet(THEME_KEY);
@@ -78,7 +77,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Safe localStorage wrappers (private browsing / quota can throw)     */
+  /* Safe localStorage wrappers (private browsing / quota can throw)    */
   /* ------------------------------------------------------------------ */
   function safeGet(key) {
     try { return localStorage.getItem(key); } catch (e) { return null; }
@@ -88,7 +87,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Navbar: scroll shadow + mobile menu                                  */
+  /* Navbar: scroll shadow + mobile menu                                */
   /* ------------------------------------------------------------------ */
   function initNavbar() {
     const navbar = $('navbar');
@@ -115,7 +114,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Reveal-on-scroll                                                     */
+  /* Reveal-on-scroll                                                   */
   /* ------------------------------------------------------------------ */
   function initReveal() {
     const targets = document.querySelectorAll('.stat-card, .chart-card, .rule-card, .feature-card, .savings-card, .recommend-card, .export-card, .budget-card');
@@ -139,7 +138,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Button ripple                                                        */
+  /* Button ripple                                                      */
   /* ------------------------------------------------------------------ */
   function initRipple() {
     document.querySelectorAll('.btn').forEach((btn) => {
@@ -152,7 +151,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Animated counters                                                    */
+  /* Animated counters                                                  */
   /* ------------------------------------------------------------------ */
   const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -183,7 +182,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Form: build state from inputs                                       */
+  /* Form: build state from inputs                                      */
   /* ------------------------------------------------------------------ */
   function readFormState() {
     const s = {};
@@ -220,23 +219,32 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Core calculation engine                                             */
+  /* Core calculation engine                                            */
   /* ------------------------------------------------------------------ */
   function calculate(s) {
     const totalIncome = INCOME_FIELDS.reduce((sum, f) => sum + s[f], 0);
     const totalExpenses = EXPENSE_FIELDS.reduce((sum, f) => sum + s[f], 0);
-    const needsTotal = NEEDS_FIELDS.reduce((sum, f) => sum + s[f], 0);
-    const wantsTotal = WANTS_FIELDS.reduce((sum, f) => sum + s[f], 0);
+    
+    // Grab raw rule totals before normalization
+    const needsTotalRaw = NEEDS_FIELDS.reduce((sum, f) => sum + s[f], 0);
+    const wantsTotalRaw = WANTS_FIELDS.reduce((sum, f) => sum + s[f], 0);
 
     // Normalize to monthly figures if the user entered semester totals
     const isSemester = s.timeframe === 'semester';
     const monthsInSemester = Math.max(s.semesterLength / 30, 0.1);
+    
     const monthlyIncome = isSemester ? totalIncome / monthsInSemester : totalIncome;
     const monthlyExpenses = isSemester ? totalExpenses / monthsInSemester : totalExpenses;
+    
+    // Fix: Needs and Wants must also be scaled down if timeframe is semester
+    const needsTotal = isSemester ? needsTotalRaw / monthsInSemester : needsTotalRaw;
+    const wantsTotal = isSemester ? wantsTotalRaw / monthsInSemester : wantsTotalRaw;
 
     const remainingBalance = monthlyIncome - monthlyExpenses;
-    const remainingDays = Math.max(s.remainingDays, 1);
-    const dailyLimit = remainingBalance > 0 ? remainingBalance / remainingDays : 0;
+    
+    // Fix: Daily limit should be calculated over a standard 30-day month, 
+    // since remainingBalance is a monthly figure.
+    const dailyLimit = remainingBalance > 0 ? remainingBalance / 30 : 0;
 
     // Savings goal progress
     const savingsGoal = s.savingsGoal;
@@ -244,15 +252,13 @@
     const savingsRemaining = Math.max(savingsGoal - currentSavings, 0);
     const savingsPercent = savingsGoal > 0 ? clamp((currentSavings / savingsGoal) * 100, 0, 100) : 0;
 
-    // Semester runway: how many days the *current total pool* (remaining balance + current savings)
-    // will last at the current monthly burn rate.
-    const dailyBurn = monthlyExpenses / 30;
-    const availablePool = Math.max(remainingBalance, 0) + currentSavings;
+    // Fix: Semester runway calculates how many days current savings will last based on monthly deficit.
     let runwayDays;
-    if (dailyBurn > 0) {
-      runwayDays = availablePool / dailyBurn;
+    if (remainingBalance >= 0) {
+      runwayDays = 9999; // Generating a surplus, funds won't run out
     } else {
-      runwayDays = availablePool > 0 ? 9999 : 0;
+      const dailyDeficit = Math.abs(remainingBalance) / 30;
+      runwayDays = currentSavings / dailyDeficit;
     }
     runwayDays = clamp(runwayDays, 0, 9999);
     const runwayMonths = runwayDays / 30;
@@ -260,7 +266,7 @@
     const semesterElapsed = clamp(s.semesterLength - s.remainingDays, 0, s.semesterLength);
     const semesterCompletionPct = s.semesterLength > 0 ? clamp((semesterElapsed / s.semesterLength) * 100, 0, 100) : 0;
 
-    // 50/30/20 rule — percentages of income (guards against zero income)
+    // 50/30/20 rule — percentages of income
     const incomeForPct = monthlyIncome > 0 ? monthlyIncome : (monthlyExpenses > 0 ? monthlyExpenses : 1);
     const needsPct = clamp((needsTotal / incomeForPct) * 100, 0, 999);
     const wantsPct = clamp((wantsTotal / incomeForPct) * 100, 0, 999);
@@ -290,7 +296,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Render: dashboard summary cards                                      */
+  /* Render: dashboard summary cards                                    */
   /* ------------------------------------------------------------------ */
   function renderSummary(r) {
     const maxScale = Math.max(r.totalIncome, r.totalExpenses, 1) * 1.15;
@@ -322,7 +328,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Render: 50/30/20 rule cards                                         */
+  /* Render: 50/30/20 rule cards                                        */
   /* ------------------------------------------------------------------ */
   function renderRule(r) {
     renderRuleCard('needs', r.needsPct, 50, {
@@ -352,12 +358,10 @@
     const diff = pct - target;
     let status, label;
     if (key === 'savings') {
-      // For savings, higher is better
       if (pct >= target) { status = 'good'; label = 'Excellent — ' + messages.good; }
       else if (pct >= target * 0.5) { status = 'warn'; label = messages.warn; }
       else { status = 'bad'; label = messages.bad; }
     } else {
-      // For needs/wants, lower (or on-target) is better
       if (diff <= 2) { status = 'good'; label = 'On track — ' + messages.good; }
       else if (diff <= 10) { status = 'warn'; label = messages.warn; }
       else { status = 'bad'; label = messages.bad; }
@@ -367,7 +371,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Render: daily spending card                                         */
+  /* Render: daily spending card                                        */
   /* ------------------------------------------------------------------ */
   function renderDaily(r) {
     animateCounter($('dailyAmount'), 0, Math.max(Math.round(r.dailyLimit), 0));
@@ -382,12 +386,13 @@
       $('dailyStatus').textContent = `You can safely spend up to ${r.currency}${formatNumber(r.dailyLimit)} per day for the rest of this month.`;
     }
 
-    drawDailyRing(clamp(r.remainingDays / 30, 0, 1));
+    // Fix: Scale the ring appropriately using semesterLength
+    drawDailyRing(clamp(r.remainingDays / (r.semesterLength || 1), 0, 1));
     $('dailyRingLabel').textContent = Math.min(r.remainingDays, 999);
   }
 
   /* ------------------------------------------------------------------ */
-  /* Render: semester runway card                                        */
+  /* Render: semester runway card                                       */
   /* ------------------------------------------------------------------ */
   function renderRunway(r) {
     const monthsLeft = r.runwayDays >= 9999 ? '99+' : (Math.round(r.runwayMonths * 10) / 10).toFixed(1);
@@ -410,7 +415,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Render: savings goal tracker                                        */
+  /* Render: savings goal tracker                                       */
   /* ------------------------------------------------------------------ */
   function renderSavingsGoal(r) {
     animateCounter($('savingsCurrentVal'), 0, r.currentSavings);
@@ -422,7 +427,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Render: smart recommendations                                       */
+  /* Render: smart recommendations                                      */
   /* ------------------------------------------------------------------ */
   function renderRecommendations(r) {
     const grid = $('recommendGrid');
@@ -444,7 +449,6 @@
       grid.appendChild(li);
     });
 
-    // trigger reveal animation for newly added cards
     requestAnimationFrame(() => {
       grid.querySelectorAll('.reveal').forEach((el, i) => {
         setTimeout(() => el.classList.add('is-visible'), i * 60);
@@ -465,7 +469,6 @@
       recs.push({ tone: 'success', icon: iconCheck(), text: `Semester budget looks healthy — <strong>${r.currency}${formatNumber(r.dailyLimit)}/day</strong> to work with.` });
     }
 
-    // Category-specific checks against income share
     const income = r.totalIncome > 0 ? r.totalIncome : r.totalExpenses;
     const foodShare = income > 0 ? (r.expenseBreakdown.find((e) => e.key === 'food')?.value || 0) / income : 0;
     const entShare = income > 0 ? (r.expenseBreakdown.find((e) => e.key === 'entertainment')?.value || 0) / income : 0;
@@ -513,11 +516,15 @@
   const iconPiggy = () => iconWrap('<path d="M19 5c-1.5-1.5-4-2-6-1L5 12l3 3-8 4 4-8 3 3 8-8c1-2 .5-4.5-1-6z"/>');
 
   /* ------------------------------------------------------------------ */
-  /* Canvas: Bar chart — Income vs Expenses                              */
+  /* Canvas: Bar chart — Income vs Expenses                             */
   /* ------------------------------------------------------------------ */
   function drawBarChart(income, expenses, currency) {
     const canvas = $('chartBar');
     const ctx = canvas.getContext('2d');
+    
+    // Fix: Cancel overlapping animations
+    if (canvas.animId) cancelAnimationFrame(canvas.animId);
+
     const dpr = window.devicePixelRatio || 1;
     const cssW = canvas.clientWidth || 480;
     const cssH = 260;
@@ -535,7 +542,6 @@
     const padTop = 24, padBottom = 40, padLeft = 10, padRight = 10;
     const chartH = cssH - padTop - padBottom;
 
-    // Gridlines
     ctx.strokeStyle = gridColor;
     ctx.lineWidth = 1;
     for (let i = 0; i <= 4; i++) {
@@ -556,7 +562,6 @@
       { label: 'Expenses', value: expenses, colorA: '#EF4444', colorB: '#F87171', x: startX + barW + gap }
     ];
 
-    const progress = { t: 0 };
     const duration = reducedMotion ? 1 : 900;
     const start = performance.now();
 
@@ -597,9 +602,11 @@
         }
       });
 
-      if (t < 1) requestAnimationFrame(frame);
+      if (t < 1) {
+        canvas.animId = requestAnimationFrame(frame);
+      }
     }
-    requestAnimationFrame(frame);
+    canvas.animId = requestAnimationFrame(frame);
   }
 
   function roundRectPath(ctx, x, y, w, h, r) {
@@ -616,11 +623,15 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Canvas: Pie chart — Expense breakdown                                */
+  /* Canvas: Pie chart — Expense breakdown                              */
   /* ------------------------------------------------------------------ */
   function drawPieChart(breakdown) {
     const canvas = $('chartPie');
     const ctx = canvas.getContext('2d');
+    
+    // Fix: Cancel overlapping animations
+    if (canvas.animId) cancelAnimationFrame(canvas.animId);
+
     const dpr = window.devicePixelRatio || 1;
     const size = Math.min(canvas.clientWidth || 200, 200);
     canvas.width = size * dpr;
@@ -666,16 +677,18 @@
         ctx.fill();
         angle += sliceAngle;
       });
-      // Donut hole for a modern look
+
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       ctx.beginPath();
       ctx.arc(cx, cy, radius * 0.56, 0, Math.PI * 2);
       ctx.fillStyle = isDark ? '#131826' : '#FFFFFF';
       ctx.fill();
 
-      if (t < 1) requestAnimationFrame(frame);
+      if (t < 1) {
+        canvas.animId = requestAnimationFrame(frame);
+      }
     }
-    requestAnimationFrame(frame);
+    canvas.animId = requestAnimationFrame(frame);
 
     sorted.forEach((slice, i) => {
       const li = document.createElement('li');
@@ -686,11 +699,15 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Canvas: generic ring chart (savings progress rings)                  */
+  /* Canvas: generic ring chart (savings progress rings)                */
   /* ------------------------------------------------------------------ */
   function drawRingChart(canvasId, fraction, color) {
     const canvas = $(canvasId);
     const ctx = canvas.getContext('2d');
+    
+    // Fix: Cancel overlapping animations
+    if (canvas.animId) cancelAnimationFrame(canvas.animId);
+
     const dpr = window.devicePixelRatio || 1;
     const size = canvas.getAttribute('width') ? parseInt(canvas.getAttribute('width'), 10) : 220;
     const cssSize = Math.min(canvas.clientWidth || size, size);
@@ -729,14 +746,20 @@
       ctx.arc(cx, cy, radius, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * current);
       ctx.stroke();
 
-      if (t < 1) requestAnimationFrame(frame);
+      if (t < 1) {
+        canvas.animId = requestAnimationFrame(frame);
+      }
     }
-    requestAnimationFrame(frame);
+    canvas.animId = requestAnimationFrame(frame);
   }
 
   function drawDailyRing(fraction) {
     const canvas = $('dailyRing');
     const ctx = canvas.getContext('2d');
+    
+    // Fix: Cancel overlapping animations
+    if (canvas.animId) cancelAnimationFrame(canvas.animId);
+
     const dpr = window.devicePixelRatio || 1;
     const size = 180;
     canvas.width = size * dpr;
@@ -766,13 +789,15 @@
       ctx.arc(cx, cy, radius, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * current);
       ctx.stroke();
 
-      if (t < 1) requestAnimationFrame(frame);
+      if (t < 1) {
+        canvas.animId = requestAnimationFrame(frame);
+      }
     }
-    requestAnimationFrame(frame);
+    canvas.animId = requestAnimationFrame(frame);
   }
 
   /* ------------------------------------------------------------------ */
-  /* Master render: calls every render function from one result object   */
+  /* Master render: calls every render function from one result object  */
   /* ------------------------------------------------------------------ */
   function renderAll(r) {
     renderSummary(r);
@@ -789,10 +814,18 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Form events: calculate / save / reset                                */
+  /* Form events: calculate / save / reset                              */
   /* ------------------------------------------------------------------ */
   function initForm() {
     const form = $('budgetForm');
+    
+    // Fix: Trigger instant update on any keystroke or form change
+    form.addEventListener('input', () => {
+      state = readFormState();
+      const result = calculate(state);
+      renderAll(result);
+    });
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       state = readFormState();
@@ -824,7 +857,6 @@
 
     $('currency').addEventListener('change', (e) => updateCurrencyPrefixes(e.target.value));
 
-    // Recalculate automatically on Enter within any number field
     form.querySelectorAll('input[type="number"]').forEach((input) => {
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -844,7 +876,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Toast                                                                */
+  /* Toast                                                              */
   /* ------------------------------------------------------------------ */
   function showToast(msg) {
     const toast = $('toast');
@@ -855,7 +887,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Persisted data: load on startup                                      */
+  /* Persisted data: load on startup                                    */
   /* ------------------------------------------------------------------ */
   function loadSavedData() {
     const raw = safeGet(STORAGE_KEY);
@@ -871,7 +903,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Export: JSON, CSV, Print                                             */
+  /* Export: JSON, CSV, Print                                           */
   /* ------------------------------------------------------------------ */
   function downloadFile(filename, content, mime) {
     const blob = new Blob([content], { type: mime });
@@ -919,7 +951,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Privacy link — small inline notice, no navigation needed             */
+  /* Privacy link — small inline notice, no navigation needed           */
   /* ------------------------------------------------------------------ */
   function initFooterLinks() {
     $('privacyLink').addEventListener('click', (e) => {
@@ -929,7 +961,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Resize: redraw canvases responsively (debounced)                     */
+  /* Resize: redraw canvases responsively (debounced)                   */
   /* ------------------------------------------------------------------ */
   function initResize() {
     let timer;
@@ -942,7 +974,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Init                                                                 */
+  /* Init                                                               */
   /* ------------------------------------------------------------------ */
   function init() {
     initTheme();
