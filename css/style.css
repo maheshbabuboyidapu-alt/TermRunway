@@ -1,5 +1,5 @@
 /* =========================================
-   TERMRUNWAY - MASTER CSS
+   TERMRUNWAY - MASTER CSS (Vanilla Framework)
    ========================================= */
 
 * {
@@ -29,17 +29,20 @@ body {
     padding: 20px;
 }
 
-/* UPDATED: Gradient Hero Logo */
+/* --- THEME-MATCHED GRADIENT LOGO --- */
 #hero-logo {
     font-size: 3.5em;
     font-weight: 700;
     letter-spacing: -1px;
     margin-bottom: 5px;
     
-    background: linear-gradient(to right, #f9d423, #ff4e50);
+    /* Matches your exact theme colors (Blue to Pink) */
+    background: linear-gradient(45deg, #4158D0, #C850C0);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.2));
+    
+    /* Soft white shadow so it pops against the background */
+    filter: drop-shadow(0px 2px 8px rgba(255, 255, 255, 0.5)); 
 }
 
 #hero-section p {
@@ -84,15 +87,18 @@ body {
     padding: 15px 20px;
 }
 
-/* UPDATED: Gradient Nav Logo */
+/* --- THEME-MATCHED GRADIENT NAV LOGO --- */
 .nav-logo {
     font-size: 1.5em;
     font-weight: 700;
     
-    background: linear-gradient(to right, #f9d423, #ff4e50);
+    /* Matches your exact theme colors */
+    background: linear-gradient(45deg, #4158D0, #C850C0);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2));
+    
+    /* Soft white shadow so it pops against the glass */
+    filter: drop-shadow(0px 2px 6px rgba(255, 255, 255, 0.5));
 }
 
 .nav-links {
@@ -236,11 +242,10 @@ input:focus {
 }
 #reset-btn:hover { background: #d83b65; color: #fff; }
 
-/* UPDATED: Solid Vibrant Green Download Button */
 #download-btn {
-    background: linear-gradient(45deg, #10b981, #059669);
-    color: #ffffff;
-    border: none;
+    background: transparent;
+    color: #10b981;
+    border: 2px solid #10b981;
     padding: 12px;
     font-size: 1em;
     font-weight: 600;
@@ -248,13 +253,9 @@ input:focus {
     cursor: pointer;
     width: 100%;
     margin-bottom: 25px;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
 }
-#download-btn:hover { 
-    transform: translateY(-2px); 
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-}
+#download-btn:hover { background: #10b981; color: #fff; }
 
 /* --- DASHBOARD STYLING --- */
 .highlight-balance { font-size: 1.8em; color: #4158D0; margin: 15px 0; }
