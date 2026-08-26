@@ -235,3 +235,59 @@ hr {
         margin-top: 5px;
     }
 }
+/* --- BRICK 14: Download Button Style --- */
+#download-btn {
+    background: transparent;
+    color: #10b981; /* A nice success green */
+    border: 2px solid #10b981;
+    padding: 12px;
+    font-size: 1em;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 25px;
+    transition: all 0.2s ease;
+}
+
+#download-btn:hover {
+    background: #10b981;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+/* --- THE PRINT & PDF MAGIC --- */
+/* These rules ONLY apply when you click download/print */
+@media print {
+    /* Hide the background, inputs, tabs, and all buttons */
+    body {
+        background: #ffffff;
+        color: #000000;
+        padding: 0;
+    }
+    
+    .input-column, .toggle-container, button {
+        display: none !important;
+    }
+    
+    /* Make the Dashboard take up the whole page */
+    .app-layout {
+        display: block;
+    }
+    
+    .results-column {
+        width: 100%;
+    }
+    
+    #dashboard-section {
+        background: #ffffff;
+        border: none;
+        box-shadow: none;
+        color: #000000;
+    }
+
+    /* Make the text black for easy reading on the PDF */
+    #dashboard-section h2, .highlight-balance {
+        color: #000000;
+    }
+}

@@ -173,3 +173,7 @@ document.getElementById('reset-btn').addEventListener('click', function() {
     
     document.getElementById('daily-limit-message').innerHTML = `<p><em>🗓️ Pick a Semester End Date above to calculate your daily spending limit!</em></p>`;
 });
+// --- BRICK 14: The Download Button ---
+document.getElementById('download-btn').addEventListener('click', function() {
+    window.print();
+});
