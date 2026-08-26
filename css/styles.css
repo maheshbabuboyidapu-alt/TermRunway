@@ -1,5 +1,5 @@
 /* =========================================
-   TERMRUNWAY - AURORA GLASS DESIGN
+   TERMRUNWAY - AURORA GLASS DESIGN (FIXED LAYOUT)
    ========================================= */
 
 * {
@@ -98,8 +98,8 @@ section > p {
     font-size: 0.9em;
 }
 
-/* --- INPUT FIELDS --- */
-section div {
+/* --- INPUT FIELDS (FIXED: Only applies to left column) --- */
+.input-column section div {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -191,6 +191,11 @@ hr {
     margin: 20px 0;
 }
 
+#daily-limit-message p {
+    margin-bottom: 0;
+    color: #444;
+}
+
 /* =========================================
    THE DESKTOP / LAPTOP LAYOUT MAGIC
    ========================================= */
@@ -221,7 +226,7 @@ hr {
 
 /* Mobile Tweaks */
 @media (max-width: 600px) {
-    section div {
+    .input-column section div {
         flex-direction: column;
         align-items: flex-start;
     }
