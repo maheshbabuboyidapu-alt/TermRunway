@@ -3,14 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TermRunway - MY Budget</title>
+    <meta name="description" content="TermRunway is a student budget planning tool.">
+    <title>TermRunway - My Budget</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <header>
-        <h1>TermRunway</h1>
+    <!-- THE STICKY GLASS NAVBAR (Starts hidden) -->
+    <nav id="glass-nav">
+        <div class="nav-content">
+            <h2 class="nav-logo">TermRunway</h2>
+            <div class="nav-links">
+                <a href="#income-section">Income</a>
+                <a href="#expenses-section">Expenses</a>
+                <a href="#dashboard-section">Summary</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- THE BIG CENTER HERO AREA -->
+    <header id="hero-section">
+        <h1 id="hero-logo">TermRunway</h1>
         <p>Manage your student budget, smarter.</p>
     </header>
 
@@ -31,67 +46,31 @@
                 <h2>1. Enter Your Income</h2>
                 <p id="income-desc">How much money do you have for the semester?</p>
 
-                <div>
-                    <label for="income-scholarship">Scholarship: ₹</label>
-                    <input type="number" id="income-scholarship" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="income-part-time">Part-Time Job: ₹</label>
-                    <input type="number" id="income-part-time" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="income-parents">Parents Support: ₹</label>
-                    <input type="number" id="income-parents" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="income-freelance">Freelance/Gigs: ₹</label>
-                    <input type="number" id="income-freelance" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="income-savings">Prior Savings: ₹</label>
-                    <input type="number" id="income-savings" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="income-other">Other Income: ₹</label>
-                    <input type="number" id="income-other" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
+                <div><label>Scholarship: ₹</label><input type="number" id="income-scholarship" placeholder="0" min="0"></div>
+                <div><label>Part-Time Job: ₹</label><input type="number" id="income-part-time" placeholder="0" min="0"></div>
+                <div><label>Parents Support: ₹</label><input type="number" id="income-parents" placeholder="0" min="0"></div>
+                <div><label>Freelance/Gigs: ₹</label><input type="number" id="income-freelance" placeholder="0" min="0"></div>
+                <div><label>Prior Savings: ₹</label><input type="number" id="income-savings" placeholder="0" min="0"></div>
+                <div><label>Other Income: ₹</label><input type="number" id="income-other" placeholder="0" min="0"></div>
             </section>
 
             <section id="expenses-section">
                 <h2>2. Enter Your Expenses</h2>
                 <p id="expense-desc">What are your estimated costs?</p>
 
-                <div>
-                    <label for="expense-rent">Rent: ₹</label>
-                    <input type="number" id="expense-rent" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="expense-food">Food: ₹</label>
-                    <input type="number" id="expense-food" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="expense-transport">Transport: ₹</label>
-                    <input type="number" id="expense-transport" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="expense-utilities">Utilities (Wifi/Phone): ₹</label>
-                    <input type="number" id="expense-utilities" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="expense-entertainment">Entertainment: ₹</label>
-                    <input type="number" id="expense-entertainment" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
-                <div>
-                    <label for="expense-other">Other Expenses: ₹</label>
-                    <input type="number" id="expense-other" placeholder="0" min="0" onkeydown="if(event.key === '-') event.preventDefault();">
-                </div>
+                <div><label>Rent: ₹</label><input type="number" id="expense-rent" placeholder="0" min="0"></div>
+                <div><label>Food: ₹</label><input type="number" id="expense-food" placeholder="0" min="0"></div>
+                <div><label>Transport: ₹</label><input type="number" id="expense-transport" placeholder="0" min="0"></div>
+                <div><label>Utilities: ₹</label><input type="number" id="expense-utilities" placeholder="0" min="0"></div>
+                <div><label>Entertainment: ₹</label><input type="number" id="expense-entertainment" placeholder="0" min="0"></div>
+                <div><label>Other Expenses: ₹</label><input type="number" id="expense-other" placeholder="0" min="0"></div>
             </section>
 
             <section id="timeline-section">
                 <h2>3. Semester Timeline</h2>
                 <p>When does your semester end?</p>
                 <div>
-                    <label for="semester-end">End Date:</label>
+                    <label>End Date:</label>
                     <input type="date" id="semester-end">
                 </div>
             </section>
@@ -103,12 +82,12 @@
                 <button id="calculate-btn">Calculate My Budget</button>
                 <button id="reset-btn">Reset Budget</button>
                 <button id="download-btn">Download PDF Summary</button>
+                
                 <div id="results-box">
                     <h2>Your Summary</h2>
                     <div class="summary-box">
                         <p>Total Income: <strong>₹<span id="display-income">0.00</span></strong></p>
                         <p>Total Expenses: <strong>₹<span id="display-expenses">0.00</span></strong></p>
-                        
                     </div>
                     
                     <h3 class="highlight-balance">Remaining Balance: ₹<span id="display-balance">0.00</span></h3>
@@ -128,7 +107,6 @@
                 </div>
             </section>
         </div>
-
     </main>
 
     <script src="js/script.js"></script>

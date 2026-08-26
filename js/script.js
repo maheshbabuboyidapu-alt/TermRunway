@@ -1,191 +1,152 @@
-// --- BRICK 12: Mode Toggle Logic ---
+// --- 1. BLOCK INVALID CHARACTERS IN NUMBER INPUTS ---
+const numberInputs = document.querySelectorAll('input[type="number"]');
+numberInputs.forEach(input => {
+    input.addEventListener('keydown', function(event) {
+        const invalidChars = ["-", "+", "e", "E"]; 
+        if (invalidChars.includes(event.key)) {
+            event.preventDefault();
+        }
+    });
+});
+
+// --- 2. CROSS-FADE ANIMATION SCROLL LISTENER ---
+window.addEventListener('scroll', function() {
+    const glassNav = document.getElementById('glass-nav');
+    const heroSection = document.getElementById('hero-section');
+    
+    if (window.scrollY > 80) {
+        glassNav.classList.add('visible');
+        heroSection.style.opacity = '0'; // Fade out Big Logo
+    } else {
+        glassNav.classList.remove('visible');
+        heroSection.style.opacity = '1'; // Bring back Big Logo
+    }
+});
+
+// --- 3. DOM ELEMENTS ---
+const btnSemester = document.getElementById('btn-semester');
+const btnMonthly = document.getElementById('btn-monthly');
+const incomeDesc = document.getElementById('income-desc');
+const expenseDesc = document.getElementById('expense-desc');
+
 let isMonthlyMode = false;
 
-document.getElementById('btn-semester').addEventListener('click', function() {
+// --- 4. MODE TOGGLE LOGIC ---
+btnSemester.addEventListener('click', () => {
     isMonthlyMode = false;
-    this.className = 'active-mode';
-    document.getElementById('btn-monthly').className = 'inactive-mode';
-    document.getElementById('income-desc').innerText = "How much money do you have for the semester?";
-    document.getElementById('expense-desc').innerText = "What are your estimated costs?";
-    document.getElementById('calculate-btn').click(); // Auto-recalculate
+    btnSemester.className = 'active-mode';
+    btnMonthly.className = 'inactive-mode';
+    incomeDesc.innerText = "How much money do you have for the semester?";
+    expenseDesc.innerText = "What are your estimated costs?";
 });
 
-document.getElementById('btn-monthly').addEventListener('click', function() {
+btnMonthly.addEventListener('click', () => {
     isMonthlyMode = true;
-    this.className = 'active-mode';
-    document.getElementById('btn-semester').className = 'inactive-mode';
-    document.getElementById('income-desc').innerText = "How much money do you get per month?";
-    document.getElementById('expense-desc').innerText = "What are your estimated costs per month?";
-    document.getElementById('calculate-btn').click(); // Auto-recalculate
+    btnMonthly.className = 'active-mode';
+    btnSemester.className = 'inactive-mode';
+    incomeDesc.innerText = "Enter your average MONTHLY income.";
+    expenseDesc.innerText = "Enter your average MONTHLY costs.";
 });
 
-
-// --- BRICK 4: Smooth Typing (Enter Key Logic) ---
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter' || event.code === 'NumpadEnter') {
-        let currentBox = document.activeElement;
-        if (currentBox.tagName === 'INPUT') {
-            event.preventDefault(); 
-            let allInputs = Array.from(document.querySelectorAll('input'));
-            let currentIndex = allInputs.indexOf(currentBox);
-            if (currentIndex > -1 && currentIndex < allInputs.length - 1) {
-                allInputs[currentIndex + 1].focus();
-            } else if (currentIndex === allInputs.length - 1) {
-                document.getElementById('calculate-btn').focus();
-            }
-        }
-    }
-});
-
-// --- BRICK 5, 6, 7, 8 & 12: The Math Engine ---
+// --- 5. CORE CALCULATE FUNCTION ---
 document.getElementById('calculate-btn').addEventListener('click', function() {
-    
-    // 1. GATHER RAW INPUTS
-    let scholarship = Number(document.getElementById('income-scholarship').value) || 0;
-    let partTime = Number(document.getElementById('income-part-time').value) || 0;
-    let parents = Number(document.getElementById('income-parents').value) || 0;
-    let otherIncome = Number(document.getElementById('income-other').value) || 0;
-    let rawIncome = scholarship + partTime + parents + otherIncome;
+    // 1. Gather all inputs
+    let totalIncome = 0;
+    let totalExpenses = 0;
 
-    let rent = Number(document.getElementById('expense-rent').value) || 0;
-    let food = Number(document.getElementById('expense-food').value) || 0;
-    let transport = Number(document.getElementById('expense-transport').value) || 0;
-    let otherExpenses = Number(document.getElementById('expense-other').value) || 0;
-    let rawExpenses = rent + food + transport + otherExpenses;
+    const incomeFields = ['income-scholarship', 'income-part-time', 'income-parents', 'income-freelance', 'income-savings', 'income-other'];
+    const expenseFields = ['expense-rent', 'expense-food', 'expense-transport', 'expense-utilities', 'expense-entertainment', 'expense-other'];
 
-    // 2. CALCULATE TIME (Days & Months Remaining)
-    let endDateInput = document.getElementById('semester-end').value;
-    let messageBox = document.getElementById('daily-limit-message');
+    incomeFields.forEach(id => {
+        let val = parseFloat(document.getElementById(id).value) || 0;
+        totalIncome += val;
+    });
+
+    expenseFields.forEach(id => {
+        let val = parseFloat(document.getElementById(id).value) || 0;
+        totalExpenses += val;
+    });
+
+    // 2. Adjust Math if Monthly Mode is ON
+    let endDate = document.getElementById('semester-end').value;
     let daysRemaining = 0;
-    let monthsRemaining = 1; // Default to 1 month
 
-    if (endDateInput) {
-        let endDate = new Date(endDateInput);
+    if (endDate) {
+        let end = new Date(endDate);
         let today = new Date();
-        let timeDiff = endDate.getTime() - today.getTime();
-        daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
-        
-        if (daysRemaining > 0) {
-            monthsRemaining = daysRemaining / (365 / 12); // exact mathematical month
-        } else {
-            daysRemaining = 0;
-            monthsRemaining = 0;
+        let differenceInTime = end.getTime() - today.getTime();
+        daysRemaining = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+
+        if (isMonthlyMode && daysRemaining > 0) {
+            // FIXED MATH BUG: Accurate month calculation
+            let monthsRemaining = daysRemaining / (365 / 12); 
+            totalIncome = totalIncome * monthsRemaining;
+            totalExpenses = totalExpenses * monthsRemaining;
         }
     }
 
-    // 3. APPLY MONTHLY MULTIPLIER (If in Monthly Mode)
-    let totalIncome = isMonthlyMode ? (rawIncome * monthsRemaining) : rawIncome;
-    let totalExpenses = isMonthlyMode ? (rawExpenses * monthsRemaining) : rawExpenses;
-    
-    let remainingBalance = totalIncome - totalExpenses;
+    // 3. Calculate Balance & 50/30/20 Rule
+    let balance = totalIncome - totalExpenses;
+    let needs = totalIncome * 0.50;
+    let wants = totalIncome * 0.30;
+    let savings = totalIncome * 0.20;
 
-    // 4. CALCULATE DAILY LIMIT & MESSAGING
-    let dailyLimit = "0.00";
-    if (endDateInput) {
-        if (daysRemaining > 0 && remainingBalance > 0) {
-            dailyLimit = (remainingBalance / daysRemaining).toFixed(2);
-            let modeText = isMonthlyMode ? "(calculated from your monthly inputs)" : "";
-            messageBox.innerHTML = `<h3>Daily Spending Limit: ₹${dailyLimit}</h3>
-                                    <p>You have ₹${remainingBalance.toFixed(2)} remaining ${modeText} to last for the next ${daysRemaining} days.</p>`;
-        } else if (remainingBalance <= 0) {
-            messageBox.innerHTML = `<p>🚨 You are out of money! No daily limit available.</p>`;
-        } else {
-            messageBox.innerHTML = `<p>⚠️ Your semester end date has already passed!</p>`;
-        }
-    } else {
-        if (isMonthlyMode) {
-             messageBox.innerHTML = `<p><em>🗓️ Pick a Semester End Date above so we can multiply your monthly numbers by the remaining months!</em></p>`;
-        } else {
-             messageBox.innerHTML = `<p><em>🗓️ Pick a Semester End Date above to calculate your daily spending limit!</em></p>`;
-        }
-    }
-
-    // 5. CALCULATE 50/30/20 RULE
-    let needs, wants, savings;
-    if (remainingBalance < 0) {
-        needs = "0.00 (Over Budget! 🚨)";
-        wants = "0.00 (Over Budget! 🚨)";
-        savings = "0.00 (Over Budget! 🚨)";
-    } else {
-        needs = (totalIncome * 0.50).toFixed(2);
-        wants = (totalIncome * 0.30).toFixed(2);
-        savings = (totalIncome * 0.20).toFixed(2);
-    }
-
-    // 6. UPDATE THE DASHBOARD
+    // 4. Update the Dashboard Text
     document.getElementById('display-income').innerText = totalIncome.toFixed(2);
     document.getElementById('display-expenses').innerText = totalExpenses.toFixed(2);
-    document.getElementById('display-balance').innerText = remainingBalance.toFixed(2);
+    document.getElementById('display-balance').innerText = balance.toFixed(2);
+    document.getElementById('display-needs').innerText = needs.toFixed(2);
+    document.getElementById('display-wants').innerText = wants.toFixed(2);
+    document.getElementById('display-savings').innerText = savings.toFixed(2);
+
+    // 5. Daily Limit Message
+    let messageBox = document.getElementById('daily-limit-message');
+    if (endDate && daysRemaining > 0) {
+        let dailyLimit = balance / daysRemaining;
+        if (dailyLimit > 0) {
+            messageBox.innerHTML = `<p>You have <strong>${daysRemaining} days</strong> left in the semester.</p>
+                                    <h3 style="color: #10b981;">You can safely spend <strong>₹${dailyLimit.toFixed(2)}</strong> per day!</h3>`;
+        } else {
+            messageBox.innerHTML = `<p style="color: #f87171;"><strong>Warning:</strong> You are out of money or in debt. Please cut back on expenses!</p>`;
+        }
+    } else {
+        messageBox.innerHTML = `<p><em>🗓️ Pick a valid Semester End Date above to calculate your daily limit!</em></p>`;
+    }
     
-    document.getElementById('display-needs').innerText = needs;
-    document.getElementById('display-wants').innerText = wants;
-    document.getElementById('display-savings').innerText = savings;
-    
-    // --- BRICK 8: SAVE DATA ---
-    let budgetData = {
-        scholarship: scholarship || "",
-        partTime: partTime || "",
-        parents: parents || "",
-        otherIncome: otherIncome || "",
-        rent: rent || "",
-        food: food || "",
-        transport: transport || "",
-        otherExpenses: otherExpenses || "",
-        endDate: endDateInput || ""
-    };
-    localStorage.setItem('termRunwayData', JSON.stringify(budgetData));
+    saveData();
 });
 
-// --- BRICK 8: LOAD SAVED DATA ---
-window.addEventListener('DOMContentLoaded', function() {
-    let savedData = localStorage.getItem('termRunwayData');
+// --- 6. LOCAL STORAGE SAVE & LOAD ---
+function saveData() {
+    const allInputs = document.querySelectorAll('input');
+    const budgetData = {};
+    allInputs.forEach(input => {
+        budgetData[input.id] = input.value;
+    });
+    localStorage.setItem('termRunwayData', JSON.stringify(budgetData));
+}
+
+function loadData() {
+    const savedData = localStorage.getItem('termRunwayData');
     if (savedData) {
-        let budgetData = JSON.parse(savedData);
-        
-        document.getElementById('income-scholarship').value = budgetData.scholarship;
-        document.getElementById('income-part-time').value = budgetData.partTime;
-        document.getElementById('income-parents').value = budgetData.parents;
-        document.getElementById('income-other').value = budgetData.otherIncome;
-        
-        document.getElementById('expense-rent').value = budgetData.rent;
-        document.getElementById('expense-food').value = budgetData.food;
-        document.getElementById('expense-transport').value = budgetData.transport;
-        document.getElementById('expense-other').value = budgetData.otherExpenses;
-        document.getElementById('semester-end').value = budgetData.endDate;
-        
+        const budgetData = JSON.parse(savedData);
+        for (const id in budgetData) {
+            if (document.getElementById(id)) {
+                document.getElementById(id).value = budgetData[id];
+            }
+        }
         document.getElementById('calculate-btn').click();
     }
+}
+window.onload = loadData;
+
+// --- 7. RESET & PDF BUTTONS ---
+document.getElementById('reset-btn').addEventListener('click', function() {
+    document.querySelectorAll('input').forEach(input => input.value = '');
+    localStorage.removeItem('termRunwayData');
+    document.getElementById('calculate-btn').click();
 });
 
-// --- BRICK 11: The Reset Button ---
-document.getElementById('reset-btn').addEventListener('click', function() {
-    localStorage.removeItem('termRunwayData');
-    
-    let allInputs = document.querySelectorAll('input');
-    allInputs.forEach(input => input.value = '');
-    
-    document.getElementById('display-income').innerText = "0.00";
-    document.getElementById('display-expenses').innerText = "0.00";
-    document.getElementById('display-balance').innerText = "0.00";
-    document.getElementById('display-needs').innerText = "0.00";
-    document.getElementById('display-wants').innerText = "0.00";
-    document.getElementById('display-savings').innerText = "0.00";
-    
-    document.getElementById('daily-limit-message').innerHTML = `<p><em>🗓️ Pick a Semester End Date above to calculate your daily spending limit!</em></p>`;
-});
-// --- BRICK 14: The Download Button ---
 document.getElementById('download-btn').addEventListener('click', function() {
     window.print();
-});
-const numberInputs = document.querySelectorAll('input[type="number"]');
-
-numberInputs.forEach(input => {
-  input.addEventListener('keydown', function(event) {
-    // Block standard scientific notation and math symbols
-    const invalidChars = ["-", "+", "e", "E"]; 
-    
-    if (invalidChars.includes(event.key)) {
-      event.preventDefault();
-    }
-  });
 });
