@@ -1,8 +1,7 @@
 /* =========================================
-   TERMRUNWAY - PREMIUM RESPONSIVE DESIGN
+   TERMRUNWAY - AURORA GLASS DESIGN
    ========================================= */
 
-/* --- 1. Global Setup & Modern Font --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,237 +9,224 @@
 }
 
 body {
-    background-color: #0d0f14; /* Deep, rich background */
-    background-image: radial-gradient(circle at top right, #1a1625, #0d0f14);
-    color: #e2e8f0;
+    /* Vibrant, non-routine gradient background */
+    background-color: #4158D0;
+    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    background-attachment: fixed;
+    color: #1a1a2e; /* Dark text for easy reading */
     font-family: 'Poppins', sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
     padding: 40px 20px;
     min-height: 100vh;
 }
 
 header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
 h1 {
     font-size: 3.5em;
     font-weight: 700;
-    margin-bottom: 5px;
-    /* Beautiful gradient text for the logo */
-    background: linear-gradient(90deg, #bb86fc, #7928ca);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     letter-spacing: -1px;
 }
 
-header p {
-    color: #94a3b8;
-    font-size: 1.1em;
-}
-
-/* --- 2. The Mode Toggle Tabs --- */
-#mode-toggle {
+/* --- THE PILL TOGGLE SWITCH --- */
+.toggle-container {
     display: flex;
     justify-content: center;
-    background-color: #1a1d27;
+    margin-bottom: 40px;
+}
+
+#mode-toggle {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
     padding: 6px;
-    border-radius: 12px;
-    margin: 0 auto 30px auto;
-    max-width: 500px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    display: inline-flex;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 #mode-toggle button {
-    flex: 1;
-    margin-bottom: 0;
-    border-radius: 8px;
-    padding: 12px 20px;
-    font-size: 1em;
+    border-radius: 40px;
+    padding: 12px 30px;
+    font-size: 1.05em;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
+/* The active button looks like a solid white sliding switch */
 .active-mode {
-    background-color: #bb86fc;
-    color: #0d0f14 !important;
-    box-shadow: 0 4px 12px rgba(187, 134, 252, 0.4);
+    background: #ffffff !important;
+    color: #C850C0 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .inactive-mode {
-    background-color: transparent !important;
-    color: #94a3b8 !important;
-    border: none !important;
+    background: transparent !important;
+    color: #ffffff !important;
 }
 
 .inactive-mode:hover {
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.05) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* --- 3. Premium Floating Cards (Sections) --- */
+/* --- FROSTED GLASS CARDS --- */
 section {
-    background-color: #171923;
-    padding: 35px;
-    border-radius: 16px;
-    margin-bottom: 30px;
-    border: 1px solid #2d3748;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-section:hover {
-    border-color: #4a5568;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 section h2 {
-    color: #ffffff;
+    color: #4158D0;
     margin-bottom: 5px;
-    font-weight: 600;
 }
 
 section > p {
-    color: #94a3b8;
-    margin-bottom: 25px;
+    color: #555;
+    margin-bottom: 20px;
     font-size: 0.9em;
 }
 
-/* --- 4. Inputs & Flexbox Alignment --- */
-/* This makes the labels and inputs sit perfectly side-by-side */
+/* --- INPUT FIELDS --- */
 section div {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 18px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-section div:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+    margin-bottom: 15px;
 }
 
 label {
-    font-weight: 400;
-    color: #cbd5e1;
-    font-size: 1.05em;
+    font-weight: 600;
+    color: #333;
 }
 
 input[type="number"], input[type="date"] {
-    background-color: #0d0f14;
-    color: #ffffff;
-    border: 1px solid #334155;
-    padding: 12px 15px;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: #1a1a2e;
+    padding: 12px;
+    border-radius: 10px;
     font-size: 1em;
     font-family: 'Poppins', sans-serif;
-    width: 220px;
+    width: 200px;
     transition: all 0.2s ease;
 }
 
 input:focus {
     outline: none;
-    border-color: #bb86fc;
-    box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.2);
+    background: #ffffff;
+    border-color: #C850C0;
+    box-shadow: 0 0 0 4px rgba(200, 80, 192, 0.2);
 }
 
-/* --- 5. Main Action Buttons --- */
-button {
-    background: linear-gradient(135deg, #bb86fc, #7928ca);
+/* --- ACTION BUTTONS --- */
+#calculate-btn {
+    background: linear-gradient(45deg, #4158D0, #C850C0);
     color: #ffffff;
     border: none;
-    padding: 18px 30px;
+    padding: 18px;
     font-size: 1.2em;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 20px rgba(200, 80, 192, 0.3);
+    transition: transform 0.2s ease;
+}
+
+#calculate-btn:hover {
+    transform: translateY(-2px);
+}
+
+#reset-btn {
+    background: transparent;
+    color: #d83b65;
+    border: 2px solid #d83b65;
+    padding: 12px;
+    font-size: 1em;
     font-weight: 600;
     border-radius: 12px;
     cursor: pointer;
     width: 100%;
-    margin-bottom: 15px;
-    box-shadow: 0 8px 20px rgba(121, 40, 202, 0.3);
-    transition: all 0.3s ease;
-}
-
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 25px rgba(121, 40, 202, 0.5);
-}
-
-button:active {
-    transform: translateY(1px);
-}
-
-/* --- 6. Reset Button --- */
-#reset-btn {
-    background: transparent;
-    color: #f87171;
-    border: 2px solid #f87171;
-    box-shadow: none;
-    padding: 14px 30px;
+    margin-bottom: 25px;
+    transition: all 0.2s ease;
 }
 
 #reset-btn:hover {
-    background-color: rgba(248, 113, 113, 0.1);
-    box-shadow: 0 4px 15px rgba(248, 113, 113, 0.2);
+    background: #d83b65;
+    color: #fff;
 }
 
-/* --- 7. Dashboard Highlight --- */
-#dashboard-section {
-    background: linear-gradient(145deg, #171923, #11131a);
-    border: 1px solid #bb86fc;
-    box-shadow: 0 10px 40px rgba(187, 134, 252, 0.15);
-}
-
-#dashboard-section h2 {
-    color: #bb86fc;
-}
-
-#dashboard-section p {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-}
-
-#dashboard-section h3 {
-    font-size: 1.5em;
-    color: #10b981; /* Success green for balance & daily limit */
+/* --- DASHBOARD STYLING --- */
+.highlight-balance {
+    font-size: 1.8em;
+    color: #4158D0;
     margin: 15px 0;
+}
+
+.summary-box p, .rule-box p {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding-bottom: 5px;
 }
 
 hr {
     border: 0;
-    border-top: 1px solid #2d3748;
-    margin: 25px 0;
+    border-top: 2px dashed rgba(0,0,0,0.1);
+    margin: 20px 0;
 }
 
-/* --- 8. SMART MOBILE RESPONSIVENESS (The Magic) --- */
-/* When the screen is smaller than 600px (Phones), do this: */
-@media (max-width: 600px) {
+/* =========================================
+   THE DESKTOP / LAPTOP LAYOUT MAGIC
+   ========================================= */
+
+/* Default Mobile: Stack everything in one column */
+.app-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* When the screen is wider than 850px (Laptops & Desktops) */
+@media (min-width: 850px) {
+    .app-layout {
+        grid-template-columns: 1fr 1fr; /* Two equal columns! */
+        gap: 40px;
+        align-items: start; /* Prevents stretching */
+    }
     
-    body {
-        padding: 20px 15px; /* Less padding on small screens */
+    /* Make the dashboard sticky so it stays on screen when scrolling */
+    .results-column {
+        position: sticky;
+        top: 30px; 
     }
+}
 
-    h1 {
-        font-size: 2.5em; /* Smaller title */
-    }
-
-    section {
-        padding: 20px; /* Tighter boxes */
-    }
-
-    /* Stack labels and inputs vertically instead of side-by-side */
+/* Mobile Tweaks */
+@media (max-width: 600px) {
     section div {
         flex-direction: column;
         align-items: flex-start;
     }
-
-    label {
-        margin-bottom: 8px;
-    }
-
     input[type="number"], input[type="date"] {
-        width: 100%; /* Inputs stretch across the whole phone screen */
+        width: 100%;
+        margin-top: 5px;
     }
 }
