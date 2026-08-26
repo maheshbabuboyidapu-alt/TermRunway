@@ -41,13 +41,15 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     
-    /* Soft white shadow so it pops against the background */
-    filter: drop-shadow(0px 2px 8px rgba(255, 255, 255, 0.5)); 
+    /* Clean dark shadow to remove the white glow */
+    filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.2)); 
 }
 
 #hero-section p {
-    color: #ffffff;
-    font-size: 1.1em;
+    color: #FFCC70; /* Warm gold to match the background gradient */
+    font-size: 1.15em;
+    font-weight: 600;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* --- CROSS-FADE FRAMEWORK: STICKY GLASS NAV --- */
@@ -97,8 +99,8 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     
-    /* Soft white shadow so it pops against the glass */
-    filter: drop-shadow(0px 2px 6px rgba(255, 255, 255, 0.5));
+    /* Clean dark shadow */
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .nav-links {
