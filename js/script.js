@@ -66,7 +66,7 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
         daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
         
         if (daysRemaining > 0) {
-            monthsRemaining = daysRemaining / 30.44; // average days in a month
+            monthsRemaining = daysRemaining / (365 / 12); // exact mathematical month
         } else {
             daysRemaining = 0;
             monthsRemaining = 0;
