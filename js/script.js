@@ -177,3 +177,15 @@ document.getElementById('reset-btn').addEventListener('click', function() {
 document.getElementById('download-btn').addEventListener('click', function() {
     window.print();
 });
+const numberInputs = document.querySelectorAll('input[type="number"]');
+
+numberInputs.forEach(input => {
+  input.addEventListener('keydown', function(event) {
+    // Block standard scientific notation and math symbols
+    const invalidChars = ["-", "+", "e", "E"]; 
+    
+    if (invalidChars.includes(event.key)) {
+      event.preventDefault();
+    }
+  });
+});
