@@ -3,7 +3,7 @@
 > **A student-focused budget planning web application.**
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-00C853?style=for-the-badge)](https://termrunway.netlify.app/)
-[![Status](https://img.shields.io/badge/Status-Active%20Development-orange?style=for-the-badge)](https://github.com/maheshbaboyidapu-alt/TermRunway)
+[![Status](https://img.shields.io/badge/Status-Active%20Development-orange?style=for-the-badge)](https://github.com/maheshbabuboyidapu-alt/TermRunway)
 
 **Live App:** https://termrunway.netlify.app/
 
